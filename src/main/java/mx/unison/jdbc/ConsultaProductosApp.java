@@ -7,16 +7,17 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 public class ConsultaProductosApp {
     private static final String SQL = """
-            SELECT
-                id_producto,
-                nombre,
-                categoria,
-                precio,
-                existencia
-            FROM producto
-            WHERE precio >= ?
-            ORDER BY precio
-            """;
+        SELECT
+            id_producto,
+            nombre,
+            categoria,
+            precio,
+            existencia
+        FROM producto
+        WHERE precio >= ?
+          AND categoria = ?
+        ORDER BY precio
+        """;
     public static void main(String[] args) {
         String url = obtenerVariable(
                 "DB_URL",
@@ -31,6 +32,9 @@ public class ConsultaProductosApp {
             return;
         }
         BigDecimal precioMinimo = obtenerPrecio(args);
+        String categoria = args.length > 1
+                ? args[1]
+                : "Periféricos";
         try (
                 Connection conexion = DriverManager.getConnection(
                         url,
@@ -41,6 +45,7 @@ public class ConsultaProductosApp {
                         conexion.prepareStatement(SQL)
         ) {
             sentencia.setBigDecimal(1, precioMinimo);
+            sentencia.setString(2, categoria);
             try (ResultSet resultados = sentencia.executeQuery()) {
                 mostrarResultados(resultados);
             }
