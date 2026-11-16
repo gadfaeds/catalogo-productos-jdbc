@@ -1,0 +1,20 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+group = 'mx.unison.basedatos'
+version = '1.0-SNAPSHOT'
+repositories {
+    mavenCentral()
+}
+dependencies {
+    implementation 'org.postgresql:postgresql:42.7.14'
+}
+application {
+    mainClass = 'mx.unison.jdbc.ConsultaProductosApp'
+}
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(27)
+    }
+}
